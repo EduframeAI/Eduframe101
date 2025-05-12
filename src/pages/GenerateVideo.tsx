@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Video, Check, AlertCircle } from 'lucide-react';
+import { Upload, Video, Check, AlertCircle, Wand2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { uploadHomeworkImage } from '../supabase/client';
+import { supabase } from '../supabase/client';
 
 interface VideoStyle {
   id: string;
@@ -17,6 +17,7 @@ const GenerateVideo: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedTeacher, setGeneratedTeacher] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const videoStyles: VideoStyle[] = [
@@ -39,6 +40,41 @@ const GenerateVideo: React.FC = () => {
       icon: <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600"><Video /></div>
     }
   ];
+
+  const handleGenerateTeacher = async () => {
+    if (!prompt) {
+      alert('Please enter a prompt first');
+      return;
+    }
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        alert('Please sign in to generate an AI teacher');
+        return;
+      }
+
+      // Save prompt to Supabase
+      const { error } = await supabase
+        .from('prompts')
+        .insert([
+          { user_id: user.id, prompt_text: prompt }
+        ]);
+
+      if (error) throw error;
+
+      // Simulate AI teacher generation
+      setIsGenerating(true);
+      setTimeout(() => {
+        setGeneratedTeacher('Your custom AI teacher has been generated!');
+        setIsGenerating(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error generating teacher:', error);
+      alert('Failed to generate AI teacher. Please try again.');
+    }
+  };
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -81,7 +117,15 @@ const GenerateVideo: React.FC = () => {
       setIsUploading(true);
       
       // Upload to Supabase storage
-      await uploadHomeworkImage(selectedFile);
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `homework/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('homework')
+        .upload(filePath, selectedFile);
+
+      if (uploadError) throw uploadError;
       
       // If upload successful, start video generation
       setIsUploading(false);
@@ -188,18 +232,29 @@ const GenerateVideo: React.FC = () => {
                 <div className="space-y-4">
                   <textarea
                     className="input h-32 resize-none"
-                    placeholder="Describe your ideal teacher. For example: 'I want a teacher who explains math concepts clearly with real-world examples and a bit of humor.'"
+                    placeholder="Generate me an anime girl with glasses"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                   />
-                  <div className="text-xs text-gray-500">
-                    <p>Tips for effective prompts:</p>
-                    <ul className="list-disc pl-5 mt-1 space-y-1">
-                      <li>Be specific about teaching style (friendly, authoritative, enthusiastic)</li>
-                      <li>Mention if you prefer step-by-step explanations</li>
-                      <li>Include any specific analogies or approaches that help you learn</li>
-                    </ul>
-                  </div>
+                  <button
+                    className="btn-primary flex items-center justify-center w-full"
+                    onClick={handleGenerateTeacher}
+                    disabled={isGenerating}
+                  >
+                    {isGenerating ? (
+                      'Generating...'
+                    ) : (
+                      <>
+                        Generate AI Teacher
+                        <Wand2 className="ml-2 h-5 w-5" />
+                      </>
+                    )}
+                  </button>
+                  {generatedTeacher && (
+                    <div className="mt-4 p-4 bg-green-50 text-green-700 rounded-lg">
+                      {generatedTeacher}
+                    </div>
+                  )}
                 </div>
               </div>
               
