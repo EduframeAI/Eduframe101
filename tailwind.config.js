@@ -50,6 +50,13 @@ export default {
           secondary: '#4CAF50',
           accent: '#FFD700',
         },
+        dark: {
+          900: '#121212',
+          800: '#1a1a1a',
+          700: '#2a2a2a',
+          600: '#3a3a3a',
+          500: '#4a4a4a',
+        },
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
