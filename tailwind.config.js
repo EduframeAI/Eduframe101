@@ -14,13 +14,6 @@ export default {
           secondary: '#4CAF50',
           accent: '#FFD700',
         },
-        dark: {
-          900: '#0a0a0f',
-          800: '#121218',
-          700: '#1a1a22',
-          600: '#22222a',
-          500: '#2a2a32',
-        },
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
