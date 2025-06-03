@@ -10,11 +10,11 @@
   }
   
   body {
-    @apply bg-white text-black;
+    @apply bg-dark-900 text-gray-100;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold leading-tight tracking-tight text-black;
+    @apply font-gaming leading-tight tracking-tight text-gray-100;
   }
   
   h1 {
@@ -30,13 +30,13 @@
   }
   
   p {
-    @apply leading-relaxed text-black;
+    @apply leading-relaxed text-gray-300;
   }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 text-base font-medium rounded-lg shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden;
+    @apply inline-flex items-center justify-center px-6 py-3 text-base font-gaming rounded-lg shadow-neon transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden;
   }
   
   .btn::before {
@@ -52,31 +52,27 @@
   }
   
   .btn-primary {
-    @apply btn bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 focus:ring-purple-500 animate-pulse-glow;
+    @apply btn bg-gradient-to-r from-gaming-primary to-gaming-accent text-white hover:from-gaming-primary/80 hover:to-gaming-accent/80 focus:ring-gaming-primary animate-neon;
   }
   
   .btn-secondary {
-    @apply btn bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 focus:ring-blue-500;
-  }
-  
-  .btn-accent {
-    @apply btn bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 focus:ring-orange-400;
-  }
-  
-  .btn-gaming {
-    @apply btn font-gaming text-lg bg-gradient-to-r from-gaming-primary via-gaming-accent to-gaming-secondary text-white shadow-lg hover:scale-105 transition-transform;
+    @apply btn bg-gradient-to-r from-gaming-secondary to-gaming-accent text-white hover:from-gaming-secondary/80 hover:to-gaming-accent/80 focus:ring-gaming-secondary;
   }
   
   .card {
-    @apply bg-white rounded-xl shadow-md p-6 transition-all duration-200 text-black border border-gray-200;
+    @apply bg-dark-800 rounded-xl shadow-neon p-6 transition-all duration-200 text-gray-100 border border-gaming-accent/20 hover:border-gaming-accent/40;
   }
   
   .input {
-    @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black placeholder-gray-500;
+    @apply w-full px-4 py-3 rounded-lg border border-gaming-accent/30 focus:outline-none focus:ring-2 focus:ring-gaming-accent focus:border-transparent bg-dark-700 text-gray-100 placeholder-gray-500;
   }
   
   .label {
-    @apply block text-sm font-medium text-black mb-1;
+    @apply block text-sm font-medium text-gray-300 mb-1;
+  }
+
+  .shadow-neon {
+    box-shadow: 0 0 10px theme(colors.gaming.accent), 0 0 20px theme(colors.gaming.primary);
   }
 }
 
@@ -87,4 +83,17 @@
   to {
     transform: translateX(100%);
   }
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px theme(colors.gaming.accent), 0 0 10px theme(colors.gaming.primary);
+  }
+  50% {
+    box-shadow: 0 0 15px theme(colors.gaming.accent), 0 0 30px theme(colors.gaming.primary);
+  }
+}
+
+.animate-neon {
+  animation: neon-pulse 2s ease-in-out infinite;
 }
